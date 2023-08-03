@@ -31,6 +31,7 @@ CREATE TABLE Comment (
     text TEXT,
     user_id INTEGER,
     question_id INTEGER,
+    created_at TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(id),
     FOREIGN KEY (question_id) REFERENCES Question(id)
 );
