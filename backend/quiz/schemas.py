@@ -34,7 +34,7 @@ class UpdateCategoryResponse(BaseModel):
     updated_category_id: int
 
 
-class UpdateAnswerRequest(BaseModel):
+class UpdateCategoryRequest(BaseModel):
     """Модель обновления категории"""
 
     name: Optional[str]
