@@ -3,10 +3,6 @@ import os
 import asyncpg
 
 
-async def get_db():
-    """Dependency for getting async session"""
-    try:
-        session = await asyncpg.connect(os.environ.get("DATABASE_URL"))
-        yield session
-    finally:
-        await session.close()
+async def get_connection_pool():
+    pool = await asyncpg.create_pool(os.environ.get("DATABASE_URL"))
+    return pool

@@ -13,8 +13,8 @@ services:
     environment:
       - ENVIRONMENT=dev
       - TESTING=0
-      - DATABASE_URL=postgresql://postgres:postgres@0.0.0.0:5432/web_dev
-      - DATABASE_TEST_URL=postgresql://postgres_test:postgres_test@0.0.0.0:5433/web_test
+      - DATABASE_URL=postgres://postgres:postgres@web-db:5432/postgres
+      - DATABASE_TEST_URL=postgres://postgres:postgres@web-db:5432/web_test
     depends_on:
       - web-db
 
