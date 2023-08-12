@@ -11,6 +11,8 @@ CREATE TABLE
         hashed_password VARCHAR(255) NOT NULL
     );
 
+CREATE INDEX idx_user_email ON Users(email);
+
 -- Создание таблицы "TestCategory"
 
 CREATE TABLE
@@ -34,6 +36,8 @@ CREATE TABLE
         FOREIGN KEY (test_name) REFERENCES TestCategory(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
 
+CREATE INDEX idx_question_test_name ON Question(test_name);
+
 -- Создание таблицы "Comment"
 
 CREATE TABLE
@@ -48,6 +52,7 @@ CREATE TABLE
             NULL ON UPDATE CASCADE,
             FOREIGN KEY (question_id) REFERENCES Question(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
+CREATE INDEX idx_comment_question_id ON Comment(question_id);
 
 -- Создание таблицы "Answer"
 
@@ -59,7 +64,7 @@ CREATE TABLE
         question_id UUID,
         FOREIGN KEY (question_id) REFERENCES Question(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
-
+CREATE INDEX idx_answer_is_right ON Answer(is_right);
 -- Создание таблицы "History"
 
 CREATE TABLE
@@ -73,7 +78,8 @@ CREATE TABLE
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE ON UPDATE CASCADE,
         FOREIGN KEY (test_name) REFERENCES TestCategory(id) ON DELETE RESTRICT ON UPDATE CASCADE
     );
-
+    
+CREATE INDEX idx_history_created_at ON History(created_at);
 -- Создание таблицы "UserAnswer"
 
 CREATE TABLE
