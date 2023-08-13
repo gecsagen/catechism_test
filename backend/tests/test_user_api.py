@@ -7,6 +7,12 @@ client = TestClient(app)
 user_id = str(uuid.uuid4())
 
 
+def test_root():
+    response = client.get("/api/healthchecker")
+    assert response.status_code == 200
+    assert response.json() == {"message": "The API is LIVE!!"}
+
+
 def test_create_user():
     sample_payload = {
         "name": "PLACEHOLDER",
@@ -15,6 +21,7 @@ def test_create_user():
         "password": "PLACEHOLDER",
     }
     response = client.post("/api/users", json=sample_payload)
+    print("Response Content:", response.content.decode())
     assert response.status_code == 201
     assert response.json() == {
         "user_id": user_id,
