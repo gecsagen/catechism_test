@@ -5,6 +5,7 @@ from session import get_connection_pool
 from asyncpg import Pool
 from fastapi import Depends
 from fastapi import HTTPException
+from fastapi import status
 from logging import getLogger
 
 logger = getLogger(__name__)
@@ -13,7 +14,7 @@ user_router = APIRouter()
 
 
 #  создание нового пользователя
-@user_router.post("/", response_model=ShowUser)
+@user_router.post("/", response_model=ShowUser, status_code=status.HTTP_201_CREATED)
 async def create_user(
     body: UserCreate, db: Pool = Depends(get_connection_pool)
 ) -> ShowUser:

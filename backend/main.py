@@ -10,7 +10,7 @@ log = logging.getLogger("uvicorn")
 
 def create_application() -> FastAPI:
     application = FastAPI()
-    application.include_router(user_router, prefix="/user", tags=["user"])
+    application.include_router(user_router, prefix="/api/users", tags=["user"])
     return application
 
 
@@ -25,3 +25,8 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     log.info("Shutting down...")
+
+
+@app.get("/api/healthchecker")
+def root():
+    return {"message": "The API is LIVE!!"}

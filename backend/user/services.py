@@ -4,7 +4,6 @@ from fastapi import Depends
 from fastapi import HTTPException
 from starlette import status
 from jose import JWTError
-import settings
 from .schemas import ShowUser
 from .schemas import UserCreate
 from .dals import UserDAL
