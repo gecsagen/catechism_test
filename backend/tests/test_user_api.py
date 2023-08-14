@@ -1,32 +1,26 @@
-from fastapi.testclient import TestClient
-from main import app
-import uuid
-
-client = TestClient(app)
-
-user_id = str(uuid.uuid4())
+import json
+import pytest
 
 
-def test_root():
+@pytest.mark.asyncio
+async def test_root(client):
     response = client.get("/api/healthchecker")
     assert response.status_code == 200
     assert response.json() == {"message": "The API is LIVE!!"}
 
 
-def test_create_user():
+@pytest.mark.asyncio
+async def test_create_user(client):
     sample_payload = {
         "name": "PLACEHOLDER",
         "surname": "PLACEHOLDER",
-        "email": "john.doe@example.com",
+        "email": "user6@example.com",
         "password": "PLACEHOLDER",
     }
-    response = client.post("/api/users", json=sample_payload)
-    print("Response Content:", response.content.decode())
+    response = client.post("/api/users", data=json.dumps(sample_payload))
+    data_from_resp = response.json()
     assert response.status_code == 201
-    assert response.json() == {
-        "user_id": user_id,
-        "name": "PLACEHOLDER",
-        "surname": "PLACEHOLDER",
-        "email": "john.doe@example.com",
-        "is_active": True,
-    }
+    assert data_from_resp["name"] == sample_payload["name"]
+    assert data_from_resp["surname"] == sample_payload["surname"]
+    assert data_from_resp["email"] == sample_payload["email"]
+    assert data_from_resp["is_active"] is True

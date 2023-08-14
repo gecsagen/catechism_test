@@ -28,5 +28,5 @@ async def shutdown_event():
 
 
 @app.get("/api/healthchecker")
-def root():
+async def root():
     return {"message": "The API is LIVE!!"}
