@@ -8,6 +8,10 @@ from session import get_connection_pool
 from fastapi.testclient import TestClient
 import pytest_asyncio
 
+CLEAN_TABLES = [
+    "Users",
+]
+
 
 @pytest_asyncio.fixture(scope="session")
 def event_loop():
@@ -20,6 +24,14 @@ async def _asyncpg_pool():
     pool = await asyncpg.create_pool(settings.TEST_DATABASE_URL)
     yield pool
     await pool.close()
+
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
+async def clear_database():
+    async with asyncpg.create_pool(settings.TEST_DATABASE_URL) as pool:
+        async with pool.acquire() as conn:
+            for table_for_cleaning in CLEAN_TABLES:
+                await conn.execute(f"TRUNCATE TABLE {table_for_cleaning} CASCADE;")
 
 
 @pytest_asyncio.fixture(scope="function")
