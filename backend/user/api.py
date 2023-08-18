@@ -1,14 +1,18 @@
-from fastapi import APIRouter
-from .schemas import UserCreate, ShowUser, DeleteUserResponse
-from .services import _create_new_user, get_current_user_from_token, _delete_user
-from session import get_connection_pool
-from asyncpg import Pool
-from fastapi import Depends
-from fastapi import HTTPException
-from fastapi import status
 from logging import getLogger
-from .schemas import User
 from uuid import UUID
+
+from asyncpg import Pool
+from fastapi import APIRouter, Depends, HTTPException, status
+from session import get_connection_pool
+
+from .schemas import DeleteUserResponse, ShowUser, User, UserCreate
+from .services import (
+    _create_new_user,
+    _delete_user,
+    _get_user_by_id,
+    check_user_permissions,
+    get_current_user_from_token,
+)
 
 logger = getLogger(__name__)
 
@@ -26,3 +30,28 @@ async def create_user(
     except Exception as err:
         logger.error(err)
         raise HTTPException(status_code=503, detail=f"Database error: {err}")
+
+
+@user_router.delete("/", response_model=DeleteUserResponse)
+async def delete_user(
+    user_id: UUID,
+    db: Pool = Depends(get_connection_pool),
+    current_user: User = Depends(get_current_user_from_token),
+) -> DeleteUserResponse:
+    user_for_deletion = await _get_user_by_id(user_id, db)
+    if user_for_deletion is None:
+        raise HTTPException(
+            status_code=404, detail=f"User with id {user_id} not found."
+        )
+    if not check_user_permissions(
+        target_user=user_for_deletion,
+        current_user=current_user,
+    ):
+        raise HTTPException(status_code=403, detail="Forbidden.")
+    deleted_user_id = await _delete_user(user_id, db)
+    if deleted_user_id is None:
+        raise HTTPException(
+            status_code=404, detail=f"User with id {user_id} not found."
+        )
+    return DeleteUserResponse(deleted_user_id=deleted_user_id)
+
