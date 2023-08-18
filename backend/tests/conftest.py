@@ -2,7 +2,7 @@ import asyncpg
 import asyncio
 import settings
 from typing import Any
-from typing import Generator
+from typing import AsyncGenerator
 from main import app
 from session import get_connection_pool
 from fastapi.testclient import TestClient
@@ -35,7 +35,7 @@ async def clear_database():
 
 
 @pytest_asyncio.fixture(scope="function")
-async def client() -> Generator[TestClient, Any, None]:
+async def client() -> AsyncGenerator[TestClient, Any, None]:
     """
     Create a new FastAPI TestClient that uses the db_session fixture to override
     the get_db dependency that is injected into routes.

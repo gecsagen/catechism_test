@@ -1,7 +1,7 @@
 from typing import Union
 from uuid import UUID
 from asyncpg import Pool
-from schemas import User
+from .schemas import User
 
 
 class UserDAL:
