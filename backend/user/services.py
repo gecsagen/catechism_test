@@ -109,3 +109,9 @@ async def get_current_user_from_token(
     if user is None:
         raise credentials_exception
     return user
+
+
+def check_user_permissions(target_user: User, current_user: User) -> bool:
+    if target_user["id"] != current_user["id"] and current_user["is_admin"] == True:
+        return True
+    return False

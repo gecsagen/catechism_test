@@ -1,12 +1,14 @@
 from fastapi import APIRouter
-from .schemas import UserCreate, ShowUser
-from .services import _create_new_user
+from .schemas import UserCreate, ShowUser, DeleteUserResponse
+from .services import _create_new_user, get_current_user_from_token, _delete_user
 from session import get_connection_pool
 from asyncpg import Pool
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
 from logging import getLogger
+from .schemas import User
+from uuid import UUID
 
 logger = getLogger(__name__)
 
