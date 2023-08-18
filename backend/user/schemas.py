@@ -1,13 +1,14 @@
 import re
 import uuid
 from typing import Optional
-
+from typing import Mapping, Any
 from pydantic import BaseModel
 from pydantic import constr
 from pydantic import EmailStr
 
 LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
+User = Mapping[str, Any]
 
 class TunedModel(BaseModel):
     class Config:
