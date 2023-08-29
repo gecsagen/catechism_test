@@ -3,6 +3,7 @@ import logging
 from fastapi import FastAPI
 
 from user.api import user_router
+from user.api_login import login_router
 
 
 log = logging.getLogger("uvicorn")
@@ -11,6 +12,7 @@ log = logging.getLogger("uvicorn")
 def create_application() -> FastAPI:
     application = FastAPI(debug=True)
     application.include_router(user_router, prefix="/api/users", tags=["user"])
+    application.include_router(login_router, prefix="/login", tags=["login"])
     return application
 
 
