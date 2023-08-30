@@ -35,7 +35,7 @@ async def clear_database():
 
 
 @pytest_asyncio.fixture(scope="function")
-async def client() -> AsyncGenerator[TestClient, Any, None]:
+async def client() -> AsyncGenerator:
     """
     Create a new FastAPI TestClient that uses the db_session fixture to override
     the get_db dependency that is injected into routes.
