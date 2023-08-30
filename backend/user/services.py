@@ -51,7 +51,7 @@ async def _get_user_by_id(user_id, pool: Pool) -> Union[ShowUser, None]:
     )
     if user is not None:
         return ShowUser(
-            user_id=user["user_id"],
+            user_id=user["id"],
             name=user["name"],
             surname=user["surname"],
             email=user["email"],

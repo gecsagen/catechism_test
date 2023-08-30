@@ -48,9 +48,8 @@ class UserDAL:
         async with self.connection_pool.acquire() as con:
             result: User = await con.fetchrow(
                 """
-                    SELECT * FROM Users WHERE id = $1
-                    RETURNING id, name, surname, email, is_active, is_admin;
-                    """,
+                SELECT * FROM Users WHERE id = $1
+                """,
                 user_id,
             )
             if result is not None:

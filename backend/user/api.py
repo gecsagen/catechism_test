@@ -61,7 +61,7 @@ async def delete_user(
 async def get_user_by_id(
     user_id: UUID,
     db: Pool = Depends(get_connection_pool),
-    current_user: User = Depends(get_current_user_from_token),
+    #current_user: User = Depends(get_current_user_from_token),
 ) -> ShowUser:
     #  вызывается функция получения пользователя по id
     user = await _get_user_by_id(user_id, db)

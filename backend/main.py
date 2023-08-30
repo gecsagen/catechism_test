@@ -1,5 +1,5 @@
 import logging
-
+import uvicorn
 from fastapi import FastAPI
 
 from user.api import user_router
@@ -32,3 +32,6 @@ async def shutdown_event():
 @app.get("/api/healthchecker")
 async def root():
     return {"message": "The API is LIVE!!"}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host='0.0.0.0', port=8000)
