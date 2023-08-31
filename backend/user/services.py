@@ -1,19 +1,21 @@
 from typing import Union
 from uuid import UUID
+
+import settings
+from asyncpg import Pool
 from fastapi import Depends
 from fastapi import HTTPException
-from starlette import status
-from jose import JWTError
-from .schemas import ShowUser
-from .schemas import UserCreate
-from .schemas import User
-from .dals import UserDAL
-from .hashing import Hasher
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
-from asyncpg import Pool
+from jose import JWTError
 from session import get_connection_pool
-import settings
+from starlette import status
+
+from .dals import UserDAL
+from .hashing import Hasher
+from .schemas import ShowUser
+from .schemas import User
+from .schemas import UserCreate
 
 
 #  создание пользователя
@@ -111,7 +113,9 @@ async def get_current_user_from_token(
     return user
 
 
-def check_user_permissions(target_user: User, current_user: User) -> bool:
-    if target_user["id"] != current_user["id"] and current_user["is_admin"] == True:
+#  FIXME: исправить разрешение, добавить проверку на админа
+def check_user_permissions(target_user: ShowUser, current_user: User) -> bool:
+    # if target_user.user_id != current_user["id"] and current_user["is_admin"] == True:
+    if target_user.user_id != current_user["id"]:
         return True
     return False

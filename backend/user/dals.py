@@ -1,6 +1,8 @@
 from typing import Union
 from uuid import UUID
+
 from asyncpg import Pool
+
 from .schemas import User
 
 
@@ -31,16 +33,16 @@ class UserDAL:
     async def delete_user(self, user_id: UUID) -> Union[UUID, None]:
         async with self.connection_pool.acquire() as con:
             # Удаление записи и возврат id удаленной записи
-            deleted_id_str: str = await con.fetchval(
+            deleted_id_str: str = await con.fetchrow(
                 """
                 UPDATE Users
-                SET is_active = False
-                WHERE user_id = $1 AND is_active = True
+                SET is_active = false
+                WHERE id = $1 AND is_active = true
                 RETURNING id;
                 """,
                 user_id,
             )
-            deleted_id = UUID(deleted_id_str) if deleted_id_str else None
+            deleted_id = deleted_id_str["id"] if deleted_id_str else None
             return deleted_id
 
     # Получение пользователя по id
@@ -60,9 +62,8 @@ class UserDAL:
         async with self.connection_pool.acquire() as con:
             result: User = await con.fetchrow(
                 """
-                    SELECT * FROM Users WHERE email = $1
-                    RETURNING id, name, surname, email, is_active, is_admin, hashed_password;
-                    """,
+                SELECT * FROM Users WHERE email = $1
+                """,
                 email,
             )
             if result is not None:
